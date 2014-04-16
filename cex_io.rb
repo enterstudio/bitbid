@@ -36,7 +36,19 @@ class CexIO
     @api = CexAPI.new
   end
 
-  %W(ticker order_book trade_history).each do |method|
+  def trade_history
+    body = @api.trade_history.perform.body
+    trades = JSON(body)
+    trades.each do |trade|
+      %W(amount price).each do |key|
+        trade[key] = trade[key].to_f
+      end
+    end
+    return trades
+  end
+
+  # dynamically
+  %W(ticker order_book).each do |method|
     define_method(method) do
       body = @api.send(method).perform.body
       JSON(body)
