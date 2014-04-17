@@ -11,7 +11,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140417023611) do
+ActiveRecord::Schema.define(version: 20140417024428) do
+
+  create_table "cexio_tickers", force: true do |t|
+    t.float    "last"
+    t.float    "high"
+    t.float    "low"
+    t.float    "volume"
+    t.float    "bid"
+    t.float    "ask"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "coinbase_prices", force: true do |t|
     t.float    "buy_price"
