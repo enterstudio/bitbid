@@ -1,6 +1,3 @@
-require "weary"
-require "json"
-
 class CexAPI < Weary::Client
   domain "https://cex.io/api"
 
