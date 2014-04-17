@@ -19,6 +19,17 @@
 
 # Learn more: http://github.com/javan/whenever
 
+every 10.minutes do
+
+    runner "CexioTicker.fetch"
+end
+
+every 20.minutes do
+    runner "Trade.fetch"
+end
+
 every :hour do
 
+    runner "Bid.fetch"
+    runner "Ask.fetch"
 end
