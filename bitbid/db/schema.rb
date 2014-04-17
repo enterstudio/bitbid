@@ -11,7 +11,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140417024428) do
+ActiveRecord::Schema.define(version: 20140417025124) do
+
+  create_table "asks", force: true do |t|
+    t.float    "price"
+    t.float    "amount"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "bids", force: true do |t|
+    t.float    "price"
+    t.float    "amount"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "cexio_tickers", force: true do |t|
     t.float    "last"
@@ -27,6 +41,15 @@ ActiveRecord::Schema.define(version: 20140417024428) do
   create_table "coinbase_prices", force: true do |t|
     t.float    "buy_price"
     t.float    "sell_price"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "trades", force: true do |t|
+    t.string   "tid"
+    t.float    "amount"
+    t.float    "price"
+    t.datetime "date"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
