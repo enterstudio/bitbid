@@ -4,7 +4,11 @@ timestamp(){
   echo $(date +"%Y%m%d%H%M");
 }
 
-
-ruby ./trader/bids_exporter.rb > data/bids/$(timestamp).csv
-ruby ./trader/asks_exporter.rb > data/asks/$(timestamp).csv
-
+echo "Running exporter script"
+echo "running bids exporter"
+ruby ./trader/bids_exporter.rb > data/bids/bids.csv
+echo "running asks exporter"
+ruby ./trader/asks_exporter.rb > data/asks/asks.csv
+echo "running trades exporter"
+ruby ./trader/trades_exporter.rb > data/trades/trades.csv
+echo "done"
