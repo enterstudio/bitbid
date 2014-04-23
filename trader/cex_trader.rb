@@ -1,4 +1,5 @@
 require 'cexio'
+require 'log'
 
 module Trader
   class CexTrader
@@ -6,11 +7,12 @@ module Trader
     # @param {CEX::API} api an instance of CEX::API properly configured for use
     #                       The instance should be setup for buy, sell, account balance
     #                       and open orders
-    def initialize(api:nil, sleep_period: 30, log: nil)
+    def initialize(log: nil, sleep_period: 30, trade_context: nil, api: nil)
       @should_terminate = false
-      @api = ap
       @sleep_period = sleep_period
+      @trade_context = trade_context
       @log = log
+      @api = api
     end
 
     # calling the start methods starts the trader, i.e. begins trading
@@ -33,6 +35,7 @@ module Trader
     def iterate
       while @should_terminate == false do
         begin
+          @log.debug "iterating"
           # first update all the data variables so that there is always a 'fresh' state
           # at least as 'fresh' as possible
           trade_context = get_trade_context()
@@ -61,34 +64,40 @@ module Trader
           sleep(@sleep_period)
         rescue => err
           @log.error("Error while iterating")
-          @log.error(error)
+          @log.error(err)
         end
       end
     end
 
-    # returns true if at least one order should be cancelled
-    def should_cancel(trade_context)
-      # TODO
-    end
-
-    # returns the orders that should be cancelled
-    def get_orders_to_cancel(trade_context)
-      # TODO
-    end
-
+    # Cancels all orders with the given ids
     def cancel_orders(order_ids)
-      # TODO
+      order_ids.each do |id|
+        @api.cancel_order(id)
+        @log.info "successfully cancelled order #{id}"
+      end
     end
 
     # calls the api to update the trades, bids, asks, balance data
     def get_trade_context
-      return TradeContext.new(@api)
+      return @trade_context.fetch
     end
 
     # this method stops the trader and cancels all active trades
     # TODO not sure if this method is useful right now, maybe in the near future it will be removed
     def terminate
       @should_terminate = true
+    end
+
+    # places a sell order with the given price and amount
+    def place_sell_order(price, amount)
+      @log.info "placing sell order for price: #{price}, amount: #{amount}"
+      @api.place_order('sell', amount, price, @couple)
+    end
+
+    # places a buy order with the given price and amount
+    def place_buy_order(price, amount)
+      @log.info "placing buy order for price: #{price}, amount: #{amount}"
+      @api.place_order('buy', amount, price, @couple)
     end
 
     # if this method returns true then the trader should buy
@@ -125,17 +134,16 @@ module Trader
       raise Exception, 'unimplemented method calc_sell_order'
     end
 
-    # places a sell order with the given price and amount
-    def place_sell_order(price, amount)
-      @log.info "placing sell order for price: #{price}, amount: #{amount}"
-      @api.place_order('sell', amount, price, @couple)
+    # returns true if at least one order should be cancelled
+    def should_cancel(trade_context)
+      raise Exception, "unimplemented method should_cancel"
     end
 
-    # places a buy order with the given price and amount
-    def place_buy_order(price, amount)
-      @log.info "placing buy order for price: #{price}, amount: #{amount}"
-      @api.place_order('buy', amount, price, @couple)
+    # returns the orders that should be cancelled
+    def get_orders_to_cancel(trade_context)
+      raise Exception, "unimplemented method should_cancel"
     end
 
   end
+
 end
