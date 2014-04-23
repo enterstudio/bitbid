@@ -1,5 +1,5 @@
 require 'cexio'
-require 'log'
+require 'logger'
 
 module Trader
   class CexTrader
@@ -65,6 +65,7 @@ module Trader
         rescue => err
           @log.error("Error while iterating")
           @log.error(err)
+          break
         end
       end
     end

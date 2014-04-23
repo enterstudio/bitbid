@@ -1,13 +1,16 @@
 require 'logger'
+require_relative 'cex_trader'
+require_relative 'trade_context'
 
 module Trader
 
   class ReadonlyTrader < CexTrader
 
     def ReadonlyTrader.create
-      api = CEX::API.new ENV['cex-username'], ENV['cex-api-key'], ENV['cex-api-secret']
-      sleep_period = 30 # measured in seconds
+      api = CEX::API.new ENV['cex_username'], ENV['cex_api_key'], ENV['cex_api_secret']
+      sleep_period = 10 # measured in seconds
       log = Logger.new STDOUT
+      trade_context = TradeContext.new api: api
       return ReadonlyTrader.new(log: log, sleep_period: sleep_period, trade_context: trade_context, api: api)
     end
 
