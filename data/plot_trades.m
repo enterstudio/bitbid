@@ -3,7 +3,7 @@ function [ res] = plot_trades( trades )
 %   Detailed explanation goes here
 
     prices = trades(:,2);
-    
+
     plot(prices,'--b');
     hold on;
     plot(tsmovavg(prices,'e',100,1),'-m');
