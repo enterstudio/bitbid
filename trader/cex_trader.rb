@@ -4,6 +4,7 @@ require 'logger'
 module Trader
   class CexTrader
 
+    attr_reader :should_terminate
     # @param {CEX::API} api an instance of CEX::API properly configured for use
     #                       The instance should be setup for buy, sell, account balance
     #                       and open orders
@@ -32,7 +33,7 @@ module Trader
     # 4. Calculates if a sell should be made
     #   => places the sell
     # 5. sleeps and re-iterates
-    def iterate
+    def iterate(run_once: false)
       while @should_terminate == false do
         begin
           @log.debug "iterating"
@@ -61,6 +62,8 @@ module Trader
             sell_order = calc_sell_order(trade_context)
             place_sell_order(sell_order[0],sell_order[1])
           end
+
+          break if run_once
           sleep(@sleep_period)
         rescue => err
           @log.error("Error while iterating")
@@ -108,7 +111,7 @@ module Trader
     # @param {array} bids   an array of current open bids
     # @param {array} asks   an array of current open asks
     def should_buy(trade_context)
-      raise Exception, 'unimplemented method should_buy'
+      raise NotImplementedError, 'unimplemented method should_buy'
     end
 
     # if this method returns true then the trader should sell
@@ -118,31 +121,31 @@ module Trader
     # @param {array} bids   an array of current open bids
     # @param {array} asks   an array of current open asks
     def should_sell(trade_context)
-      raise Exception, 'unimplemented method should_sell'
+      raise NotImplementedError, 'unimplemented method should_sell'
     end
 
     # Calculates the order that should be placed given the current
     # trader state.
     # @return {array} an array of [price, quantity]
     def calc_buy_order(trade_context)
-      raise Exception, 'unimplemented method calc_buy_order'
+      raise NotImplementedError, 'unimplemented method calc_buy_order'
     end
 
     # Calculates the order that should be placed given the current
     # trader state.
     # @return {array} an array of [price, quantity]
     def calc_sell_order(trade_context)
-      raise Exception, 'unimplemented method calc_sell_order'
+      raise NotImplementedError, 'unimplemented method calc_sell_order'
     end
 
     # returns true if at least one order should be cancelled
     def should_cancel(trade_context)
-      raise Exception, "unimplemented method should_cancel"
+      raise NotImplementedError, "unimplemented method should_cancel"
     end
 
     # returns the orders that should be cancelled
     def get_orders_to_cancel(trade_context)
-      raise Exception, "unimplemented method should_cancel"
+      raise NotImplementedError, "unimplemented method get_orders_to_cancel"
     end
 
   end
