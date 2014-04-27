@@ -34,7 +34,7 @@ module Trader
       return []
     end
 
-    def calc_buyd_order(trade_context)
+    def calc_buy_order(trade_context)
       return nil
     end
 
