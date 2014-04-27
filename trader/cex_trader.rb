@@ -5,6 +5,8 @@ module Trader
   class CexTrader
 
     attr_reader :should_terminate
+    attr_reader :trade_context
+
     # @param {CEX::API} api an instance of CEX::API properly configured for use
     #                       The instance should be setup for buy, sell, account balance
     #                       and open orders
@@ -42,6 +44,8 @@ module Trader
           trade_context = get_trade_context()
           @log.debug "Trade context obtained"
           @log.debug(trade_context)
+
+          on_data_loaded(trade_context)
 
           # checks if orders should be canceled and tells the API to cancel them
           if should_cancel(trade_context)
@@ -102,6 +106,11 @@ module Trader
     def place_buy_order(price, amount)
       @log.info "placing buy order for price: #{price}, amount: #{amount}"
       @api.place_order('buy', amount, price, @couple)
+    end
+
+    # optional method to be implemented in case the user needs to do some logging as soon as the data is received
+    def on_data_loaded(trade_context)
+      # do nothing
     end
 
     # if this method returns true then the trader should buy
