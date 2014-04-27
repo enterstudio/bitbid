@@ -6,7 +6,8 @@ gem 'cexio'
 # gem for calculating moving averages
 gem 'moving_average'
 
-gem 'pusher-client'
+# high precision floats
+gem 'flt'
 
 # for testing
 gem 'rspec'
