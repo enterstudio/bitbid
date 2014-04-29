@@ -54,6 +54,7 @@ module Trader
       return prices.reduce(:+)/prices.size
     end
 
+    # calculates the average price over the top N bids
     def max_bid(num=1)
       prices = bid_prices.last(num)
       return prices.reduce(:+)/prices.size
@@ -63,7 +64,7 @@ module Trader
     # returns the difference
     # @param {number} num the number of highest bids and lowest sells to compare
     def spread(num=1)
-      max_bid(num) - min_ask(num)
+      min_ask(num) - max_bid(num)
     end
 
     # returns the users balance
@@ -86,6 +87,15 @@ module Trader
       @trade_history = @api.trade_history(1,@couple)
       @balance = @api.balance
       @active_orders = @api.open_orders
+
+      to_decnum = lambda do |order|
+        [ DecNum(order[0].to_s), DecNum(order[1].to_s) ]
+      end
+      # convert the order book to DecNum
+      @order_book['bids'].map!(&to_decnum)
+      @order_book['asks'].map!(&to_decnum)
+
+
       return self
     end
 
@@ -97,5 +107,4 @@ module Trader
       end
     end
   end
-
 end
