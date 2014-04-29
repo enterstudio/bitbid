@@ -1,8 +1,10 @@
 require 'moving_average'
+require 'flt'
 
 module Trader
 
   class TradeContext
+    include Flt
 
     attr_reader :api
 
@@ -26,10 +28,14 @@ module Trader
       @order_book['asks'] || []
     end
 
+    # returns an array of prices where
+    # bid_prices.first is the lowest price
     def bid_prices
       bids.map {|bid| bid[0] }.sort
     end
 
+    # returns an array of prices where
+    # ask_prices.first is the lowest price
     def ask_prices
       asks.map {|ask| ask[0] }.sort
     end
