@@ -77,8 +77,17 @@ module Trader
       @active_orders
     end
 
+    def active_order_ids
+      active_orders.map {|order| order['id'] }
+    end
+
     def trade_history
       @trade_history
+    end
+
+    # returns the amount currently available of the given currency symbol
+    def current_available(currency_symbol)
+      @balance[currency_symbol]['available']
     end
 
     def fetch
