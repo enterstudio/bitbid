@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # a CEX.IO api gem
-gem 'cexio'
+gem 'cexio', '>= 0.0.5'
 
 # gem for calculating moving averages
 gem 'moving_average'
